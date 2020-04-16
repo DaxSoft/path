@@ -1,0 +1,46 @@
+{
+    "name": "@vorlefan/path",
+    "version": "1.4.0",
+    "description": "Easy access and handler for folders and files paths with several tools",
+    "keywords": [
+        "path",
+        "routes",
+        "files",
+        "folder",
+        "tree"
+    ],
+    "author": {
+        "name": "Michael Willian Santos",
+        "email": "dax-soft@live.com",
+        "url": "https://daxsoft.github.io/"
+    },
+    "license": "MIT",
+    "private": false,
+    "devDependencies": {
+        "@babel/core": "^7.9.0",
+        "babel-loader": "^8.1.0",
+        "bundlesize": "^0.18.0",
+        "jest": "^25.3.0",
+        "webpack": "^4.42.1",
+        "webpack-cli": "^3.3.11"
+    },
+    "scripts": {
+        "build": "webpack --mode production",
+        "size": "bundlesize",
+        "test": "jest test & bundlesize",
+        "regula": "node .regula/src/start/index.js",
+        "@vorlefan/clear-console": "node .regula/src/command/default/src/index.js"
+    },
+    "source": "src/index.js",
+    "main": "dist/index.js",
+    "module": "dist/index.modern.module.js",
+    "unpkg": "index.umd.js",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": "daxsoft/path_route",
+    "files": [
+        "src",
+        "dist"
+    ]
+}
