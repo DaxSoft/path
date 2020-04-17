@@ -45,7 +45,7 @@ Please, take a look at the 'example' folder of this repository
  * as example.
  */
 
-const { Routes, Route } = require('../index')
+const { Routes, Route } = require('./src')
 
 // Create a new route instance and give it a name
 

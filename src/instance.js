@@ -40,6 +40,15 @@ PathRoute.prototype.initialize = function () {
 }
 
 /**
+ * @method io
+ * Access the FileManager
+ */
+
+PathRoute.prototype.io = function () {
+    return this._file
+}
+
+/**
  * @method setItem
  * @description stores a value into the Route,
  * it can be anything
@@ -237,6 +246,32 @@ PathRoute.prototype.plug = function (routeName, url) {
 
 PathRoute.prototype.clean = function (routeName) {
     return this.get(routeName).path.replace(/(\/)[(/)]/g, '/')
+}
+
+/**
+ * @method back
+ * Goes to the previous folder with level
+ * @param {Number} level by the default is 1
+ */
+
+PathRoute.prototype.back = function (routeName, level = 1) {
+    if (!!this.has(routeName)) {
+        const predPath = new Array(level).fill('..')
+        return path.resolve(this.get(routeName).path, ...predPath)
+    } else {
+        return null
+    }
+}
+
+/**
+ * @method endWith
+ * Get the last folder/file name
+ * @param {String} filepath
+ */
+
+PathRoute.prototype.endWith = function (filepath) {
+    const cleanPath = filepath.replace(/(\/)[(/)]/g, '/')
+    return path.basename(cleanPath)
 }
 
 /**

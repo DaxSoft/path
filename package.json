@@ -1,6 +1,6 @@
 {
     "name": "@vorlefan/path",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "description": "Easy access and handler for folders and files paths with several tools",
     "keywords": [
         "path",
