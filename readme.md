@@ -52,7 +52,7 @@ const { Routes, Route } = require('./src');
 
 // Create a new route instance and give it a name
 
-Routes.instance((instance) => {
+Routes.instance(({ instance }) => {
     instance.set('src', instance.resolve(__dirname, '..'));
     instance.join('test', 'src');
     instance.join('examples', 'src');
