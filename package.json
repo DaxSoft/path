@@ -1,7 +1,14 @@
 {
     "name": "@vorlefan/path",
-    "version": "1.4.1",
+    "version": "1.5.3",
     "description": "Easy access and handler for folders and files paths with several tools",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "author": {
+        "name": "Michael Willian Santos",
+        "email": "dax-soft@live.com",
+        "url": "https://daxsoft.github.io/"
+    },
     "keywords": [
         "path",
         "routes",
@@ -9,38 +16,38 @@
         "folder",
         "tree"
     ],
-    "author": {
-        "name": "Michael Willian Santos",
-        "email": "dax-soft@live.com",
-        "url": "https://daxsoft.github.io/"
-    },
     "license": "MIT",
     "private": false,
     "devDependencies": {
-        "@babel/core": "^7.9.0",
-        "babel-loader": "^8.1.0",
+        "@types/jest": "^25.2.3",
+        "@types/node": "^14.0.4",
+        "@typescript-eslint/eslint-plugin": "^2.34.0",
+        "@typescript-eslint/parser": "^2.34.0",
         "bundlesize": "^0.18.0",
-        "jest": "^25.3.0",
-        "webpack": "^4.42.1",
-        "webpack-cli": "^3.3.11"
+        "esbuild": "^0.3.5",
+        "eslint": "^7.0.0",
+        "eslint-config-prettier": "^6.11.0",
+        "eslint-plugin-prettier": "^3.1.3",
+        "jest": "^26.0.1",
+        "nodemon": "^2.0.4",
+        "ts-jest": "^26.0.0",
+        "typescript": "^3.9.3"
     },
-    "scripts": {
-        "build": "webpack --mode production",
-        "size": "bundlesize",
-        "test": "jest test & bundlesize",
-        "regula": "node .regula/src/start/index.js",
-        "@vorlefan/clear-console": "node .regula/src/command/default/src/index.js"
-    },
-    "source": "src/index.js",
-    "main": "dist/index.js",
-    "module": "dist/index.modern.module.js",
-    "unpkg": "index.umd.js",
     "publishConfig": {
         "access": "public"
     },
-    "repository": "daxsoft/path_route",
+    "scripts": {
+        "build": "node esbuild.ts & yarn run size",
+        "lint": "eslint './src/**/*.{js,ts,tsx}'",
+        "test": "jest",
+        "test:watch": "jest --watchAll",
+        "watch": "tsc -w",
+        "start": "npm link && nodemon",
+        "semantic-release": "semantic-release",
+        "size": "bundlesize"
+    },
     "files": [
-        "src",
-        "dist"
-    ]
+        "dist/**/*"
+    ],
+    "repository": "daxsoft/path_route"
 }
