@@ -61,5 +61,5 @@ Routes.instance((instance) => {
 // Access
 
 console.log(Route.Basic.get('test'));
-console.log(Route.Basic.get('examples').path);
+console.log(Route.Basic.get('examples').filepath);
 ```
