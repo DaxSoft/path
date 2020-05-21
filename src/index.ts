@@ -55,13 +55,13 @@ Routes.instance = function routesInstance(
     callback: Function,
     namespace: string
 ): PathRoute {
-    const instance: PathRoute = new PathRoute();
-    instance._namespace = namespace;
-    callback({ instance });
-    Routes._routes.push(instance);
-    Routes.route[namespace] = instance;
-    Route[namespace] = instance;
-    return instance;
+    const pathRoute: PathRoute = new PathRoute();
+    pathRoute._namespace = namespace;
+    callback({ instance: pathRoute });
+    Routes._routes.push(pathRoute);
+    Routes.route[namespace] = pathRoute;
+    Route[namespace] = pathRoute;
+    return pathRoute;
 };
 
 /**

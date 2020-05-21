@@ -15,4 +15,8 @@ describe('folder', () => {
 
         expect(Route.Test.io().hasFolder('@folder_test', 'files_test_folder'));
     });
+    test('folders', () => {
+        const folders = Route.Test.io().folders('@folder_test');
+        expect(Array.isArray(folders)).toBe(true);
+    });
 });

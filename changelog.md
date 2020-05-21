@@ -1,3 +1,11 @@
+# 1.5.5
+
+-   Fix up folders and files method from 'io()'
+
+# 1.5.4
+
+-   Change from ESBUILD to Webpack
+
 # 1.5.3
 
 -   Test added

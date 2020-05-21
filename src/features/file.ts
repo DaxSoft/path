@@ -317,16 +317,16 @@ class FileManager {
      * }
      */
 
-    async files({
+    files({
         routeName = this._routeName,
         extension,
         options,
-    }: FileManagerListFiles): Promise<Array<FileManagerFiles> | Array<[]>> {
+    }: FileManagerListFiles): Array<FileManagerFiles> | Array<[]> {
         // checkout
         if (!this._route.has(routeName)) return [];
         const route = this._route.get(routeName);
         const filepath: string = route.filepath;
-        const itExists = await this.accessFile(filepath);
+        const itExists = fs.existsSync(filepath);
         if (!itExists) return [];
 
         // extension?
@@ -338,33 +338,31 @@ class FileManager {
         const stock: Array<FileManagerFiles> = [];
 
         // get the files;
-        const files = await fs.promises.readdir(filepath, options);
+        const files = fs.readdirSync(filepath, options);
 
-        await Promise.all(
-            files.map(async (file) => {
-                const _fpath = path.join(filepath, file);
-                const status = await fs.promises.lstat(filepath);
+        files.map((file) => {
+            const _fpath = path.join(filepath, file);
+            const status = fs.lstatSync(filepath);
 
-                // is directory?
-                if (!status.isDirectory()) {
-                    let fname = _fpath.replace(/^.*[\\\/]/, '');
-                    let ext = path.extname(fname);
+            // is directory?
+            if (!status.isDirectory()) {
+                let fname = _fpath.replace(/^.*[\\\/]/, '');
+                let ext = path.extname(fname);
 
-                    // extension?
-                    if (extension && !fname.match(extension)) {
-                        return;
-                    }
-
-                    stock.push({
-                        name: fname.replace(ext, ''),
-                        filename: fname,
-                        filepath: _fpath,
-                        extension: ext,
-                        routeName: route.name,
-                    });
+                // extension?
+                if (extension && !fname.match(extension)) {
+                    return;
                 }
-            })
-        );
+
+                stock.push({
+                    name: fname.replace(ext, ''),
+                    filename: fname,
+                    filepath: _fpath,
+                    extension: ext,
+                    routeName: route.name,
+                });
+            }
+        });
 
         return stock;
     }
@@ -384,15 +382,15 @@ class FileManager {
      * }
      */
 
-    async folders(
+    folders(
         routeName = this._routeName
-    ): Promise<Array<FileManagerListFolders> | Array<[]>> {
+    ): Array<FileManagerListFolders> | Array<[]> {
         if (!this._route.has(routeName)) return [];
         const route = this._route.get(routeName);
 
         const isDirectory = (source) => fs.lstatSync(source).isDirectory();
 
-        let directories = await fs.promises.readdir(route.filepath);
+        let directories = fs.readdirSync(route.filepath);
         directories = directories
             .map((name) => path.join(route.filepath, name))
             .filter(isDirectory);
