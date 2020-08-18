@@ -11,12 +11,12 @@ import PathRoute from '../instance';
 // | [Types]
 // ------------------------------------------------------------------
 
-interface IFileJSON_Read {
+export interface IFileJSON_Read {
     routeName?: string;
     filename: string;
 }
 
-interface IFileJSON_Store {
+export interface IFileJSON_Store {
     routeName?: string;
     filename: string;
     data: any;

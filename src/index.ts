@@ -12,22 +12,9 @@
 
 import PathRoute from './instance';
 
-interface RoutesInterface {
-    _routes: Array<PathRoute>;
-    route: Record<string, PathRoute>;
-    instance: Function;
-    save: Function;
-    load: Function;
-}
+import { IRoutes, IRoutes_Save } from './types';
 
-interface IRoutesSave {
-    instance: PathRoute;
-    routeName: string;
-    filename: string;
-    force?: boolean;
-}
-
-const Routes: RoutesInterface = {
+const Routes: IRoutes = {
     _routes: [],
     route: {},
     instance: Function,
@@ -78,7 +65,7 @@ Routes.save = function ({
     routeName,
     filename,
     force = true,
-}: IRoutesSave): Boolean {
+}: IRoutes_Save): Boolean {
     if (!instance || !(instance instanceof PathRoute)) return false;
     const data = instance.routes();
     instance.json().set(routeName).storeSync({ filename, data, force });
@@ -93,14 +80,14 @@ Routes.save = function ({
  * Routes.load('./test/basic.json').namespace('Basic')
  */
 
-Routes.load = function (filepath: string) {
+Routes.load = function (filepath: string): PathRoute {
     const instance = new PathRoute();
 
     let data: any = instance.io().readSync({ filename: '', folder: filepath });
 
     if (!!data) {
         data = JSON.parse(data);
-        data.map((route) => instance.set(route.name, route.path));
+        data.map((route) => instance.set(route.name, route.filepath));
     }
 
     Routes._routes.push(instance);
@@ -113,4 +100,4 @@ Routes.load = function (filepath: string) {
 :--------------------------------------------------------------------------
 */
 
-export { Route, Routes };
+export { Route, Routes, PathRoute };

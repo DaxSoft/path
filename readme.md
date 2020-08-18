@@ -3,7 +3,7 @@
 This is my first npm package module. The main function is to give the power of easily accessing the folders and files of your project.
 Portable for TypeScript
 
-[![https://badgen.net/bundlephobia/minzip/@vorlefan/path](https://badgen.net/bundlephobia/minzip/@vorlefan/path)](https://bundlephobia.com/result?p=@vorlefan/path)
+[![https://badgen.net/bundlephobia/minzip/@vorlefan/path](https://badgen.net/bundlephobia/minzip/@vorlefan/path)](https://bundlephobia.com/result?p=@vorlefan/path)]
 
 With [npm](https://npmjs.org) do:
 
@@ -52,7 +52,7 @@ const { Routes, Route } = require('./src');
 
 // Create a new route instance and give it a name
 
-Routes.instance(({ instance }) => {
+Routes.instance((instance) => {
     instance.set('src', instance.resolve(__dirname, '..'));
     instance.join('test', 'src');
     instance.join('examples', 'src');

@@ -9,7 +9,7 @@
 */
 
 import path from 'path';
-import { FileManager, FileJSON } from './features';
+import { FileManager, FileJSON, FileStream } from './features';
 
 /*
 :--------------------------------------------------------------------------
@@ -17,11 +17,7 @@ import { FileManager, FileJSON } from './features';
 :--------------------------------------------------------------------------
 */
 
-interface PathRoute_Routes {
-    name: string;
-    filepath: string;
-    prefix?: string;
-}
+import { IPathRoute_Routes } from './types';
 
 /*
 :--------------------------------------------------------------------------
@@ -30,12 +26,13 @@ interface PathRoute_Routes {
 */
 
 class PathRoute {
-    _routes: Array<PathRoute_Routes>;
+    _routes: IPathRoute_Routes[];
     _prefix: string;
     _namespace: string;
     _storage: Record<string, any>;
     _io: FileManager;
     _json: FileJSON;
+    _stream: FileStream;
 
     constructor() {
         this._routes = [];
@@ -44,6 +41,7 @@ class PathRoute {
         this._storage = {};
         this._io = new FileManager(this);
         this._json = new FileJSON(this, '');
+        this._stream = new FileStream(this);
     }
 
     /**
@@ -60,6 +58,14 @@ class PathRoute {
 
     json(): FileJSON {
         return this._json;
+    }
+
+    /**
+     * @description access FileStream
+     */
+
+    stream(): FileStream {
+        return this._stream;
     }
 
     /**
@@ -108,7 +114,7 @@ class PathRoute {
      * @desc returns all routes
      */
 
-    routes(): Array<PathRoute_Routes> {
+    routes(): IPathRoute_Routes[] {
         return this._routes;
     }
 
@@ -141,19 +147,17 @@ class PathRoute {
      * Route.Example.set("src", __dirname)
      */
 
-    set(routeName: string, filepath: string): PathRoute_Routes {
+    set(routeName: string, filepath: string): PathRoute {
         if (!this.has(routeName)) {
-            const newRoute: PathRoute_Routes = {
+            const newRoute: IPathRoute_Routes = {
                 name: routeName,
                 filepath: filepath,
             };
 
             this._routes.push(newRoute);
-
-            return newRoute;
-        } else {
-            return this.get(routeName);
         }
+
+        return this;
     }
 
     /**
@@ -164,7 +168,7 @@ class PathRoute {
      * Route.Example.get('google') // { name: 'google', path: 'https://www.google.com.br/' }
      */
 
-    get(routeName: string): PathRoute_Routes {
+    get(routeName: string): IPathRoute_Routes {
         const response = { name: '', filepath: '', prefix: '' };
         const route: any = this._routes.find(({ name }) => name === routeName);
         if (!!route) {
@@ -208,10 +212,10 @@ class PathRoute {
         routeName: string,
         referenceRouteName: string,
         filepath?: string
-    ): PathRoute_Routes | void {
+    ): PathRoute {
         if (this.has(referenceRouteName)) {
             const getReference = this.get(referenceRouteName);
-            const newRoute: PathRoute_Routes = {
+            const newRoute: IPathRoute_Routes = {
                 name: routeName,
                 filepath: path.join(
                     getReference.filepath,
@@ -219,8 +223,8 @@ class PathRoute {
                 ),
             };
             this._routes.push(newRoute);
-            return newRoute;
         }
+        return this;
     }
 
     /**
@@ -238,12 +242,7 @@ class PathRoute {
         referenceRouteName: string,
         filepath?: string
     ): PathRoute {
-        const hasFolder = this.io().hasFolder(
-            referenceRouteName,
-            filepath || routeName
-        );
-        if (!hasFolder)
-            this.io().setFolder(routeName, filepath || referenceRouteName);
+        this.io().setFolder(routeName, filepath || referenceRouteName);
         this.join(routeName, referenceRouteName, filepath);
         return this;
     }

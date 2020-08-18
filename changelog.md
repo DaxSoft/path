@@ -1,3 +1,20 @@
+# 1.6.3
+
+-   Add FileStream
+-   Add FileStream.download to be able to download files from URI
+-   Add lastFiles to get the last file modified by his time
+-   Fix bugs
+-   Centralize Types
+-   Upgrade packages
+
+# 1.5.8
+
+-   Fix up inject() && .io().hasFolder
+
+# 1.5.6
+
+-   Fix up .io().accessFile
+
 # 1.5.5
 
 -   Fix up folders and files method from 'io()'

@@ -17,40 +17,15 @@ import PathRoute from '../instance';
 // | [Types]
 // ------------------------------------------------------------------
 
-interface FileManagerHistoricInterface {
-    routeName: string;
-    filename: string;
-    field: string;
-}
+import {
+    IFileManager_Historic,
+    IFileManager_ControlFile,
+    IFileManager_Files,
+    IFileManager_ListFiles,
+    IFileManager_ListFolders,
+} from '../types';
 
-interface FileManagerControlFile {
-    routeName?: string;
-    filename: string;
-    folder?: string | null;
-    force?: boolean;
-    data?: any;
-}
-
-interface FileManagerFiles {
-    name: string;
-    filename: string;
-    filepath: string;
-    extension: string;
-    routeName: string;
-}
-
-interface FileManagerListFiles {
-    routeName?: string;
-    extension?: string | RegExp;
-    options?: any;
-}
-
-interface FileManagerListFolders {
-    name: string;
-    path: string;
-}
-
-type FS_CONSTANTS_ACCESS = 'F_OK' | 'R_OK' | 'W_OK';
+export type FS_CONSTANTS_ACCESS = 'F_OK' | 'R_OK' | 'W_OK';
 
 // ------------------------------------------------------------------
 // | [FileManager]
@@ -59,7 +34,7 @@ type FS_CONSTANTS_ACCESS = 'F_OK' | 'R_OK' | 'W_OK';
 class FileManager {
     _route: PathRoute;
     _routeName: string;
-    _historic: Array<FileManagerHistoricInterface>;
+    _historic: IFileManager_Historic[];
 
     constructor(route: PathRoute) {
         this._route = route;
@@ -82,7 +57,7 @@ class FileManager {
      * @description get all hiistoric' log
      */
 
-    historic(): Array<FileManagerHistoricInterface> {
+    historic(): IFileManager_Historic[] {
         return this._historic;
     }
 
@@ -91,7 +66,7 @@ class FileManager {
         filename: string,
         field: string
     ): FileManager {
-        const newHistoric: FileManagerHistoricInterface = {
+        const newHistoric: IFileManager_Historic = {
             routeName,
             filename,
             field,
@@ -122,12 +97,14 @@ class FileManager {
             .map((el) => fs.constants[el])
             .reduce((acc, cur) => cur | acc);
 
-        return await new Promise<Boolean>(() => {
-            fs.promises
-                .access(filepath, mode)
-                .then(() => true)
-                .catch(() => false);
-        });
+        const itCanBeAccessed = () =>
+            new Promise<Boolean>((resolve) =>
+                fs.access(filepath, mode, (err) => resolve(!err))
+            );
+
+        const itFileExists = await itCanBeAccessed();
+
+        return itFileExists;
     }
 
     /**
@@ -160,7 +137,7 @@ class FileManager {
         routeName = this._routeName,
         filename,
         folder,
-    }: FileManagerControlFile): string | undefined {
+    }: IFileManager_ControlFile): string | undefined {
         if (!this._route.has(routeName) && !folder) return undefined;
 
         const filepath =
@@ -185,7 +162,7 @@ class FileManager {
         routeName = this._routeName,
         filename,
         folder,
-    }: FileManagerControlFile): Promise<string | undefined> {
+    }: IFileManager_ControlFile): Promise<string | undefined> {
         if (!this._route.has(routeName) && !folder) return undefined;
 
         const filepath =
@@ -220,7 +197,7 @@ class FileManager {
         filename,
         force = true,
         data,
-    }: FileManagerControlFile): Boolean {
+    }: IFileManager_ControlFile): Boolean {
         if (!this._route.has(routeName)) return false;
 
         const filepath: string = this._route.plug(routeName, filename);
@@ -245,7 +222,7 @@ class FileManager {
         filename,
         force = true,
         data,
-    }: FileManagerControlFile): Promise<Boolean> {
+    }: IFileManager_ControlFile): Promise<Boolean> {
         if (!this._route.has(routeName)) return false;
 
         const filepath: string = this._route.plug(routeName, filename);
@@ -268,7 +245,7 @@ class FileManager {
     removeSync({
         routeName = this._routeName,
         filename,
-    }: FileManagerControlFile): Boolean {
+    }: IFileManager_ControlFile): Boolean {
         if (!this._route.has(routeName)) return false;
         const filepath = this._route.plug(routeName, filename);
         if (!fs.existsSync(filepath)) {
@@ -288,7 +265,7 @@ class FileManager {
     async remove({
         routeName = this._routeName,
         filename,
-    }: FileManagerControlFile): Promise<Boolean> {
+    }: IFileManager_ControlFile): Promise<Boolean> {
         if (!this._route.has(routeName)) return false;
         const filepath = this._route.plug(routeName, filename);
         const itExists = await this.accessFile(filepath);
@@ -319,9 +296,9 @@ class FileManager {
 
     files({
         routeName = this._routeName,
-        extension,
-        options,
-    }: FileManagerListFiles): Array<FileManagerFiles> | Array<[]> {
+        extension = undefined,
+        options = {},
+    }: IFileManager_ListFiles): IFileManager_Files[] {
         // checkout
         if (!this._route.has(routeName)) return [];
         const route = this._route.get(routeName);
@@ -335,22 +312,21 @@ class FileManager {
         }
 
         // stocker
-        const stock: Array<FileManagerFiles> = [];
+        const stock: IFileManager_Files[] = [];
 
         // get the files;
         const files = fs.readdirSync(filepath, options);
 
         files.map((file) => {
             const _fpath = path.join(filepath, file);
-            const status = fs.lstatSync(filepath);
+            const status = fs.lstatSync(_fpath);
 
             // is directory?
             if (!status.isDirectory()) {
                 let fname = _fpath.replace(/^.*[\\\/]/, '');
                 let ext = path.extname(fname);
-
                 // extension?
-                if (extension && !fname.match(extension)) {
+                if (!!extension && !fname.match(extension)) {
                     return;
                 }
 
@@ -368,6 +344,28 @@ class FileManager {
     }
 
     /**
+     * @description returns the last modified files from the folder
+     * @param {String} routeName
+     */
+
+    lastFiles({
+        routeName = this._routeName,
+        extension,
+        options,
+    }: IFileManager_ListFiles): IFileManager_Files[] {
+        let files: IFileManager_Files[] = this.files({
+            routeName,
+            extension,
+            options,
+        }).sort((a, b) => {
+            const bDate = fs.statSync(b.filepath).mtimeMs;
+            const aDate = fs.statSync(a.filepath).mtimeMs;
+            return bDate - aDate;
+        });
+        return files;
+    }
+
+    /**
      * @description return all directories of the route
      * @param {String} routeName this need to be registred on route
      * @param {RegExp} [filter=undefined] this is a regexp
@@ -382,9 +380,7 @@ class FileManager {
      * }
      */
 
-    folders(
-        routeName = this._routeName
-    ): Array<FileManagerListFolders> | Array<[]> {
+    folders(routeName = this._routeName): IFileManager_ListFolders[] {
         if (!this._route.has(routeName)) return [];
         const route = this._route.get(routeName);
 
@@ -395,7 +391,7 @@ class FileManager {
             .map((name) => path.join(route.filepath, name))
             .filter(isDirectory);
 
-        const stock: Array<FileManagerListFolders> = [];
+        const stock: IFileManager_ListFolders[] = [];
 
         directories.map((source) => {
             const name = source.replace(/^.*[\\\/]/, '');
@@ -415,12 +411,7 @@ class FileManager {
      * @returns {Object|undefined}
      */
 
-    hasFolder(routeName: string, folderName: string): Boolean {
-        if (!this._route.has(routeName)) return false;
-        const filepath = path.join(
-            this._route.get(routeName).filepath,
-            folderName
-        );
+    hasFolder(filepath: string): Boolean {
         return (
             !!fs.existsSync(filepath) && fs.lstatSync(filepath).isDirectory()
         );
@@ -437,7 +428,7 @@ class FileManager {
             this._route.get(routeName).filepath,
             folderName
         );
-        if (!this.hasFolder(routeName, folderName)) {
+        if (!this.hasFolder(this._route.plug(routeName, folderName))) {
             fs.mkdirSync(filepath, {
                 recursive: false,
             });
