@@ -10,5 +10,13 @@ module.exports = {
                 semi: true,
             },
         },
+        {
+			files: ".*rc",
+			options: { "parser": "json" }
+		},
+		{
+			files: ".nvmrc",
+			options: { "parser": "yaml" }
+		}
     ],
 }

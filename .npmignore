@@ -1,5 +1,10 @@
-src/
-node_modules
-docs/
-examples/
-test/
+.*
+./*.js
+.github/
+.vscode/
+*.config.*
+*.test.*
+coverage/
+cspell.json
+pnpm-lock.yaml
+tsconfig*.json

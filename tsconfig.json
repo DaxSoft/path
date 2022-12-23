@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
-        "target": "es2018",
+        "target": "ES6",
         "module": "commonjs",
-        "lib": ["es5", "es6", "es2015", "es2016", "es2017", "es2018", "esnext"],
+        "lib": [ "esnext", "ES2021","ES2022"],
         "declaration": true,
         "sourceMap": true,
         "outDir": "./dist",
@@ -21,7 +21,7 @@
         "moduleResolution": "node",
         "rootDirs": ["./", "./src"],
         "typeRoots": ["./types", "./@types", "node_modules/@types"],
-        "types": ["node", "jest"],
+        "types": ["node"],
         "esModuleInterop": true,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,

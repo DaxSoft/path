@@ -7,7 +7,7 @@
     "author": {
         "name": "Michael Willian Santos",
         "email": "dax-soft@live.com",
-        "url": "https://daxsoft.github.io/"
+        "url": "https://path.vorlefan.com/"
     },
     "keywords": [
         "path",
@@ -16,42 +16,61 @@
         "folder",
         "tree"
     ],
+    "scripts": {
+        "build": "tsc",
+        "format": "prettier \"**/*\" --ignore-unknown",
+        "format:write": "yarn run format --write",
+        "lint": "eslint . --max-warnings 0 --report-unused-disable-directives",
+        "lint:md": "markdownlint \"**/*.md\" \".github/**/*.md\" --rules sentences-per-line",
+        "lint:package": "npmPkgJsonLint .",
+        "lint:prune": "ts-prune",
+        "lint:spelling": "cspell \"**\" \".github/**/*\"",
+        "prepare": "husky install",
+        "setup": "npx --yes zx --quiet script/setup.js",
+        "test": "vitest"
+    },
     "license": "MIT",
     "private": false,
+    "type": "module",
     "devDependencies": {
-        "@babel/core": "lastest",
-        "@types/jest": "lastest",
-        "@types/node": "lastest",
-        "@typescript-eslint/eslint-plugin": "lastest",
-        "@typescript-eslint/parser": "lastest",
-        "babel-loader": "lastest",
-        "bundlesize": "lastest",
-        "eslint": "lastest",
-        "eslint-config-prettier": "lastest",
-        "eslint-plugin-prettier": "lastest",
-        "jest": "lastest",
-        "nodemon": "lastest",
-        "ts-jest": "lastest",
-        "ts-loader": "lastest",
-        "typescript": "lastest",
-        "webpack": "lastest",
-        "webpack-cli": "lastest"
+        "@typescript-eslint/eslint-plugin": "^5.38.1",
+        "@typescript-eslint/parser": "^5.38.1",
+        "@vitest/coverage-istanbul": "^0.25.8",
+        "eslint": "^8.24.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-deprecation": "^1.3.3",
+        "eslint-plugin-eslint-comments": "^3.2.0",
+        "eslint-plugin-jsonc": "^2.4.0",
+        "eslint-plugin-markdown": "^3.0.0",
+        "eslint-plugin-no-only-tests": "^3.1.0",
+        "eslint-plugin-regexp": "^1.11.0",
+        "eslint-plugin-simple-import-sort": "^8.0.0",
+        "eslint-plugin-typescript-sort-keys": "^2.1.0",
+        "eslint-plugin-vitest": "^0.0.20",
+        "husky": "^8.0.2",
+        "jsonc-eslint-parser": "^2.1.0",
+        "lint-staged": "^13.1.0",
+        "markdownlint-cli": "^0.32.2",
+        "npm-package-json-lint": "^6.3.0",
+        "npm-package-json-lint-config-default": "^5.0.0",
+        "octokit": "^2.0.10",
+        "prettier": "^2.7.1",
+        "release-it": "^15.5.1",
+        "ts-prune": "^0.10.3",
+        "typescript": "^4.9.4",
+        "vitest": "^0.26.2"
     },
     "publishConfig": {
         "access": "public"
     },
-    "scripts": {
-        "build": "webpack --mode production & yarn run size",
-        "lint": "eslint './src/**/*.{js,ts,tsx}'",
-        "test": "jest",
-        "test:watch": "jest --watchAll",
-        "watch": "tsc -w",
-        "start": "npm link && nodemon",
-        "semantic-release": "semantic-release",
-        "size": "bundlesize"
+    "lint-staged": {
+        "*": "prettier --ignore-unknown --write"
     },
     "files": [
         "dist/**/*"
     ],
-    "repository": "daxsoft/path_route"
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DaxSoft/path"
+    }
 }
