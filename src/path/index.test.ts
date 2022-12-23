@@ -4,10 +4,11 @@ import path from 'node:path';
 import { default as PathRoute } from './index';
 
 const TestRoute = new PathRoute();
+TestRoute.add('main', __dirname);
 
 describe('PathRoute', () => {
-    it('Has zero routes initialized', () => {
-        expect(TestRoute.size()).toBe(0);
+    it('Has one route initialized', () => {
+        expect(TestRoute.size()).toBe(1);
     });
 
     it('Expect to do not have the route named x', () => {
@@ -23,7 +24,7 @@ describe('PathRoute', () => {
     });
 
     it('It should have 2 routes', () => {
-        expect(TestRoute.add('y', '../').size()).toBe(2);
+        expect(TestRoute.add('y', '../').size()).toBe(3);
     });
 
     it('It should delete the route named x', () => {
@@ -62,5 +63,11 @@ describe('PathRoute', () => {
         expect(
             TestRoute.endsWith(TestRoute.get('example')?.routePath || '')
         ).toBe('example');
+    });
+
+    it('It returns one path', () => {
+        expect(TestRoute.endsWith(TestRoute.backward('main') || '')).toBe(
+            'src'
+        );
     });
 });

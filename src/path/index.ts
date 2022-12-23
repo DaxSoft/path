@@ -173,4 +173,17 @@ export default class PathRoute implements PathRouteStructure {
         const str = sanitizeFilepath(filepath);
         return path.basename(str);
     }
+    /**
+     * @description go backward in the folder path using path.resolve with '../'
+     * @param routeName
+     * @param level
+     */
+    backward(routeName: string, level: number = 1): string | undefined {
+        const route = this.get(routeName);
+        if (route) {
+            const predPath = new Array(level).fill('..');
+            return path.resolve(route.routePath, ...predPath);
+        }
+        return undefined;
+    }
 }
