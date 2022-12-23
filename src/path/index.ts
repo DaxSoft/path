@@ -272,4 +272,21 @@ export default class PathRoute implements PathRouteStructure {
     resolve(...paths: string[]): string {
         return path.resolve(...paths);
     }
+
+    /**
+     * @description Alias for 'path.basename'
+     * @param {String} [paths]
+     */
+    basename(filepath: string, ext: string): string {
+        return path.basename(filepath, ext);
+    }
+
+    /**
+     * @description Alias for 'path.dirname'
+     * @param {String} [paths]
+     */
+
+    dirname(filepath: string): string {
+        return path.dirname(filepath);
+    }
 }

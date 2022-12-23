@@ -35,4 +35,6 @@ export interface PathRouteStructure {
     towards(filepath: string, to: string, strict?: boolean): string | undefined;
     hierarchy(routeName: string): Record<string, PathHierarchyContext>;
     resolve(...paths: string[]): string;
+    basename(filepath: string, ext: string): string;
+    dirname(filepath: string): string;
 }
