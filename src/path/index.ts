@@ -193,16 +193,16 @@ export default class PathRoute implements PathRouteStructure {
      * Example, I have a routeName (path) like this:
      *  routeName: health/clients =>  ../server/data/health/clients;
      * Then, I want to get the path only to 'data'. So I do:
-     * instance.moveTo('../server/data/health/clients', to: 'data')
+     * instance.towards('../server/data/health/clients', to: 'data')
      * So, I will get: ../server/data
      * @param {String} filepath
      * @param {String} to
      * @param {Boolean} strict if it is true, will compare as '==='; if false,
      * will use Regexp with the flgas 'giu'
      * @example
-     * instance.moveTo('../server/data/health/clients', to: 'data')
+     * instance.towards('../server/data/health/clients', to: 'data')
      */
-    moveTo(
+    towards(
         filepath: string,
         to: string,
         strict?: boolean | undefined

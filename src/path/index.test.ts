@@ -71,8 +71,8 @@ describe('PathRoute', () => {
         );
     });
 
-    it('It should be able to moveTo', () => {
-        const moveto = TestRoute.moveTo(
+    it('towards', () => {
+        const moveto = TestRoute.towards(
             TestRoute.get('main')?.routePath || '',
             'src'
         );
