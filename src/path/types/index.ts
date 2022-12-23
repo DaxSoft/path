@@ -22,4 +22,5 @@ export interface PathRouteStructure {
     ): PathRoute;
     plug(routeName: string, filepath: string): string | undefined;
     sanitize(routeName: string): string | undefined;
+    endsWith(filepath: string): string;
 }

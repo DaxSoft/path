@@ -57,4 +57,10 @@ describe('PathRoute', () => {
     it('It should be able to sanitize the routePath', () => {
         expect(TestRoute.sanitize('example')).toBe('..\\example');
     });
+
+    it('It should gets the last folder of the routePath', () => {
+        expect(
+            TestRoute.endsWith(TestRoute.get('example')?.routePath || '')
+        ).toBe('example');
+    });
 });

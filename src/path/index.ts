@@ -7,6 +7,7 @@
 */
 
 import path from 'node:path';
+import { sanitizeFilepath } from '../utils/regex';
 import {
     PathRouteStructure,
     RoutesDataContext,
@@ -158,8 +159,18 @@ export default class PathRoute implements PathRouteStructure {
      * @param routeName
      * @returns {String|undefined}
      */
+
     sanitize(routeName: string): string | undefined {
         const route = this.get(routeName);
-        return route?.routePath.replace(/(\/)[(/)]/g, '/');
+        return route ? sanitizeFilepath(route.routePath) : undefined;
+    }
+
+    /**
+     * @description get the last folder/filename
+     * @param filepath
+     */
+    endsWith(filepath: string): string {
+        const str = sanitizeFilepath(filepath);
+        return path.basename(str);
     }
 }
