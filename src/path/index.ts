@@ -173,6 +173,7 @@ export default class PathRoute implements PathRouteStructure {
         const str = sanitizeFilepath(filepath);
         return path.basename(str);
     }
+
     /**
      * @description go backward in the folder path using path.resolve with '../'
      * @param routeName
@@ -185,5 +186,48 @@ export default class PathRoute implements PathRouteStructure {
             return path.resolve(route.routePath, ...predPath);
         }
         return undefined;
+    }
+
+    /**
+     * @description Slices the path toward an subfolder.
+     * Example, I have a routeName (path) like this:
+     *  routeName: health/clients =>  ../server/data/health/clients;
+     * Then, I want to get the path only to 'data'. So I do:
+     * instance.moveTo('../server/data/health/clients', to: 'data')
+     * So, I will get: ../server/data
+     * @param {String} filepath
+     * @param {String} to
+     * @param {Boolean} strict if it is true, will compare as '==='; if false,
+     * will use Regexp with the flgas 'giu'
+     * @example
+     * instance.moveTo('../server/data/health/clients', to: 'data')
+     */
+    moveTo(
+        filepath: string,
+        to: string,
+        strict?: boolean | undefined
+    ): string | undefined {
+        try {
+            let splitPaths = filepath.split(/(\/|\\)/gimu);
+            const paths: string[] = [];
+            const totalLength = splitPaths.length;
+            for (let index = 0; index < totalLength; index++) {
+                const element = splitPaths[index];
+                paths.push(element);
+                if (!!strict) {
+                    if (element === to) {
+                        break;
+                    }
+                } else {
+                    let rule = new RegExp(`(${to})`, 'giu');
+                    if (rule.test(element)) {
+                        break;
+                    }
+                }
+            }
+            return path.join(...paths);
+        } catch (error) {
+            return undefined;
+        }
     }
 }

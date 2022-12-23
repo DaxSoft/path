@@ -24,4 +24,5 @@ export interface PathRouteStructure {
     sanitize(routeName: string): string | undefined;
     endsWith(filepath: string): string;
     backward(routeName: string, level: number): string | undefined;
+    moveTo(filepath: string, to: string, strict?: boolean): string | undefined;
 }

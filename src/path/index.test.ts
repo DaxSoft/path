@@ -70,4 +70,12 @@ describe('PathRoute', () => {
             'src'
         );
     });
+
+    it('It should be able to moveTo', () => {
+        const moveto = TestRoute.moveTo(
+            TestRoute.get('main')?.routePath || '',
+            'src'
+        );
+        expect(TestRoute.endsWith(moveto || '')).toBe('src');
+    });
 });
