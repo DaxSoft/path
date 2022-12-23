@@ -78,4 +78,9 @@ describe('PathRoute', () => {
         );
         expect(TestRoute.endsWith(moveto || '')).toBe('src');
     });
+
+    it('hierarchy', () => {
+        const hierarchy = TestRoute.hierarchy('main');
+        expect(hierarchy.hasOwnProperty('src')).toBe(true);
+    });
 });

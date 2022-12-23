@@ -7,6 +7,14 @@ export type RoutesDataContext = {
 
 export type RoutesStorageContext = Record<string, any>;
 
+export type PathHierarchyContext = {
+    path?: string;
+    index: number;
+    parent: string;
+    next: string;
+    current: string;
+};
+
 export interface PathRouteStructure {
     routes(): RoutesDataContext[];
     has(routeName: string): boolean;
@@ -25,4 +33,6 @@ export interface PathRouteStructure {
     endsWith(filepath: string): string;
     backward(routeName: string, level: number): string | undefined;
     towards(filepath: string, to: string, strict?: boolean): string | undefined;
+    hierarchy(routeName: string): Record<string, PathHierarchyContext>;
+    resolve(...paths: string[]): string;
 }

@@ -9,6 +9,7 @@
 import path from 'node:path';
 import { sanitizeFilepath } from '../utils/regex';
 import {
+    PathHierarchyContext,
     PathRouteStructure,
     RoutesDataContext,
     RoutesStorageContext,
@@ -229,5 +230,46 @@ export default class PathRoute implements PathRouteStructure {
         } catch (error) {
             return undefined;
         }
+    }
+
+    /**
+     * @description get the hierarchy structure of the subfolders
+     * @param {String} routeName
+     */
+
+    hierarchy(routeName: string): Record<string, PathHierarchyContext> {
+        const paths: Record<string, PathHierarchyContext> = {};
+        const route = this.get(routeName);
+        if (!route) return paths;
+
+        const { routePath: filepath } = route;
+        let splitPaths = filepath.replace(/(\/|\/\/|\\|\\\\)/g, ' ').split(' ');
+        splitPaths.map((current, currentIndex, array) => {
+            let previous = array[currentIndex - 1];
+
+            const index = array.length - currentIndex;
+
+            paths[current] = {
+                path: this.backward(routeName, index),
+                index,
+                next: '',
+                parent: '',
+                current,
+            };
+            if (paths.hasOwnProperty(previous)) {
+                paths[current].parent = previous;
+                paths[previous].next = current;
+            }
+        });
+
+        return paths;
+    }
+
+    /**
+     * @description Alias for 'path.resolve'
+     * @param {String} [paths]
+     */
+    resolve(...paths: string[]): string {
+        return path.resolve(...paths);
     }
 }
