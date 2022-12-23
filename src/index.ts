@@ -8,5 +8,4 @@
 : with files.
 */
 
-
-export {}
+export { default as PathRoute } from './path/index';
