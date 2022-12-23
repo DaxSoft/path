@@ -15,9 +15,7 @@ describe('PathRoute', () => {
     });
 
     it('It should add a route named x', () => {
-        expect(
-            TestRoute.add({ routeName: 'x', routePath: './' }).has('x')
-        ).toBe(true);
+        expect(TestRoute.add('x', './').has('x')).toBe(true);
     });
 
     it('The x route should returns the path of ./', () => {
@@ -25,9 +23,7 @@ describe('PathRoute', () => {
     });
 
     it('It should have 2 routes', () => {
-        expect(TestRoute.add({ routeName: 'y', routePath: '../' }).size()).toBe(
-            2
-        );
+        expect(TestRoute.add('y', '../').size()).toBe(2);
     });
 
     it('It should delete the route named x', () => {

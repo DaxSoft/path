@@ -15,7 +15,6 @@ import {
 
 export default class PathRoute implements PathRouteStructure {
     #routes: RoutesDataContext[] = [];
-    #prefix?: string;
     #namespace?: string;
     #storage: RoutesStorageContext = {};
     static instance: PathRoute;
@@ -48,10 +47,13 @@ export default class PathRoute implements PathRouteStructure {
      * @param {RoutesDataContext} context
      * @returns {PathRoute}
      */
-    add(context: RoutesDataContext): PathRoute {
-        const isNew = !this.has(context.routeName);
+    add(routeName, routePath): PathRoute {
+        const isNew = !this.has(routeName);
         if (isNew) {
-            this.#routes.push(context);
+            this.#routes.push({
+                routeName,
+                routePath,
+            });
         }
         return this;
     }
@@ -95,7 +97,7 @@ export default class PathRoute implements PathRouteStructure {
      * @param {String} routeName
      * @returns {PathRoute}
      * @example
-     * instance.add({routeName: 'x',routePath: './'})
+     * instance.add('x', './')
      * instance.alias('y', 'x')
      * instance.get('y')?.routePath === './'
      */
@@ -104,10 +106,7 @@ export default class PathRoute implements PathRouteStructure {
         const hasAliasRoute = this.has(aliasRouteName);
 
         if (!hasAliasRoute && !!route) {
-            this.add({
-                ...route,
-                routeName: aliasRouteName,
-            });
+            this.add(aliasRouteName, route.routePath);
         }
         return this;
     }
@@ -118,7 +117,7 @@ export default class PathRoute implements PathRouteStructure {
      * @param props
      * @returns {PathRoute}
      * @example
-     * instance.add({routeName: 'x',routePath: './'})
+     * instance.add('x', './')
      * instance.join('j', 'x')
      * instance.get('j').routePath === './j'
      * # or
@@ -133,11 +132,10 @@ export default class PathRoute implements PathRouteStructure {
         const route = this.get(referenceRouteName);
 
         if (!!route) {
-            this.add({
-                routeName: newRouteName,
-                routePrefix: route.routePrefix,
-                routePath: path.join(route.routePath, filepath || newRouteName),
-            });
+            this.add(
+                newRouteName,
+                path.join(route.routePath, filepath || newRouteName)
+            );
         }
 
         return this;
