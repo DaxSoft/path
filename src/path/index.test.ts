@@ -53,4 +53,8 @@ describe('PathRoute', () => {
             path.join(TestRoute.get('y')?.routePath || '', 'plug')
         );
     });
+
+    it('It should be able to sanitize the routePath', () => {
+        expect(TestRoute.sanitize('example')).toBe('..\\example');
+    });
 });
