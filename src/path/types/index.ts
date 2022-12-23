@@ -20,4 +20,5 @@ export interface PathRouteStructure {
         referenceRouteName: string,
         filepath?: string
     ): PathRoute;
+    plug(routeName: string, filepath: string): string | undefined;
 }

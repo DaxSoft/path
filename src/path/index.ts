@@ -140,4 +140,16 @@ export default class PathRoute implements PathRouteStructure {
 
         return this;
     }
+
+    /**
+     * Uses the method path.join with an existing route
+     * @param {String} routeName
+     * @param {String} filepath
+     * @returns {String}
+     */
+    plug(routeName: string, filepath: string): string | undefined {
+        const route = this.get(routeName);
+        if (!route) return undefined;
+        return path.join(route.routePath, filepath);
+    }
 }

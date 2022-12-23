@@ -47,4 +47,10 @@ describe('PathRoute', () => {
             )
         );
     });
+
+    it('It should be able to plug a path in another using a route as base', () => {
+        expect(TestRoute.plug('y', 'plug')).toBe(
+            path.join(TestRoute.get('y')?.routePath || '', 'plug')
+        );
+    });
 });
