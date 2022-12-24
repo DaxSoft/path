@@ -58,5 +58,11 @@ export interface PathRouteStructure {
         extension?: string
     ): Promise<FilesDataContext[]>;
     allFilepaths(folderpath: string, files: string[]): Promise<string[]>;
-    folders(routeName: string): Promise<FolderDataContext[]>;
+    folders(routeName: string): FolderDataContext[];
+    inject(
+        newRouteName: string,
+        referenceRouteName: string,
+        filepath?: string
+    ): PathRoute;
+    foldersJoin(routeName: string): PathRoute;
 }

@@ -406,8 +406,8 @@ export default class PathRoute implements PathRouteStructure {
      * @param {String} routeName this need to be registred on route
      * @param {RegExp} [filter=undefined] this is a regexp
      * @example
-     * Route.Example.folders('home')
-     * Route.Example.folders('home', /^\a/gi)
+     * instance.folders('home')
+     * instance.folders('home', /^\a/gi)
      * @return {Array} each element on this <array> will be a <object> with
      * the follow pattern:
      * {
@@ -415,7 +415,7 @@ export default class PathRoute implements PathRouteStructure {
      *  path: path to folder,
      * }
      */
-    async folders(routeName: string): Promise<FolderDataContext[]> {
+    folders(routeName: string): FolderDataContext[] {
         const data: FolderDataContext[] = [];
 
         const route = this.get(routeName);
@@ -435,5 +435,46 @@ export default class PathRoute implements PathRouteStructure {
         });
 
         return data;
+    }
+
+    /**
+     * @description create the folder if doesn't exist and join up the route
+     * to another
+     * @param {String} newRouteName new routename and filepath, if filepath isn't deifned
+     * @param {String} referenceRouteName route name of the reference
+     * @param {String} filepath if isn't defined, then will use
+     * the routeName as the path to join up.
+     * @returns {this}
+     */
+
+    inject(
+        newRouteName: string,
+        referenceRouteName: string,
+        filepath?: string | undefined
+    ): PathRoute {
+        if (this.has(newRouteName)) return this;
+        const folderPath: string = !!filepath ? filepath : newRouteName;
+        this.io().createFolder(this.plug(referenceRouteName, folderPath) || '');
+        this.join(newRouteName, referenceRouteName, filepath);
+        return this;
+    }
+
+    /**
+     * @description join the subfolder into a main folder, in ordered & structured mode.
+     * Like:
+     *   main-folder: src;
+     *   sub-folders: data, public;
+     * Be:
+     *  src
+     *  src/data
+     *  src/public
+     */
+
+    foldersJoin(routeName: string): PathRoute {
+        if (!this.has(routeName)) return this;
+        this.folders(routeName).map(({ name, path }) =>
+            this.add(`${routeName}/${name}`, path)
+        );
+        return this;
     }
 }
