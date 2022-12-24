@@ -1,4 +1,5 @@
-import PathRoute from '..';
+import PathRoute from '../path';
+import PathFileManager from '../path/io';
 
 export type RoutesDataContext = {
     routeName: string;
@@ -16,6 +17,7 @@ export type PathHierarchyContext = {
 };
 
 export interface PathRouteStructure {
+    io(): PathFileManager;
     routes(): RoutesDataContext[];
     has(routeName: string): boolean;
     add(routeName: string, routePath: string): PathRoute;

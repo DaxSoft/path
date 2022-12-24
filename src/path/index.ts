@@ -12,17 +12,24 @@ import {
     PathHierarchyContext,
     PathRouteStructure,
     RoutesDataContext,
-} from './types';
+} from '../types';
+import PathFileManager from './io';
 
 export default class PathRoute implements PathRouteStructure {
     #routes: RoutesDataContext[] = [];
+    #io: PathFileManager;
     static instance: PathRoute;
 
     constructor() {
+        this.#io = new PathFileManager(this);
         if (PathRoute.instance) {
             return PathRoute.instance;
         }
         PathRoute.instance = this;
+    }
+
+    io(): PathFileManager {
+        return this.#io;
     }
 
     /**
