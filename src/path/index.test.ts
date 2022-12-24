@@ -7,31 +7,31 @@ const TestRoute = new PathRoute();
 TestRoute.add('main', __dirname);
 
 describe('PathRoute', () => {
-    it('Has one route initialized', () => {
+    it('size', () => {
         expect(TestRoute.size()).toBe(1);
     });
 
-    it('Expect to do not have the route named x', () => {
+    it('has', () => {
         expect(TestRoute.has('x')).toBe(false);
     });
 
-    it('It should add a route named x', () => {
+    it('add', () => {
         expect(TestRoute.add('x', './').has('x')).toBe(true);
     });
 
-    it('The x route should returns the path of ./', () => {
+    it('get', () => {
         expect(TestRoute.get('x')?.routePath).toBe('./');
     });
 
-    it('It should have 2 routes', () => {
+    it('add+size', () => {
         expect(TestRoute.add('y', '../').size()).toBe(3);
     });
 
-    it('It should delete the route named x', () => {
+    it('Iremove', () => {
         expect(TestRoute.remove('x').has('x')).toBe(false);
     });
 
-    it('It should create an alias from y route and returns the same path as y route', () => {
+    it('alias', () => {
         const alias = TestRoute.alias('z', 'y').get('z');
         const y = TestRoute.get('y');
 
@@ -39,7 +39,7 @@ describe('PathRoute', () => {
         expect(alias?.routePath === y?.routePath).toBe(true);
     });
 
-    it('It should be able to join the example route to the y route and returns the path joined', () => {
+    it('join', () => {
         const example = TestRoute.join('example', 'y').get('example');
         expect(example?.routePath).toBe(
             path.join(
@@ -49,23 +49,23 @@ describe('PathRoute', () => {
         );
     });
 
-    it('It should be able to plug a path in another using a route as base', () => {
+    it('plug', () => {
         expect(TestRoute.plug('y', 'plug')).toBe(
             path.join(TestRoute.get('y')?.routePath || '', 'plug')
         );
     });
 
-    it('It should be able to sanitize the routePath', () => {
+    it('sanitize', () => {
         expect(TestRoute.sanitize('example')).toBe('..\\example');
     });
 
-    it('It should gets the last folder of the routePath', () => {
+    it('endsWith', () => {
         expect(
             TestRoute.endsWith(TestRoute.get('example')?.routePath || '')
         ).toBe('example');
     });
 
-    it('It returns one path', () => {
+    it('backward', () => {
         expect(TestRoute.endsWith(TestRoute.backward('main') || '')).toBe(
             'src'
         );

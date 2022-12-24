@@ -21,7 +21,7 @@ export default class PathRoute implements PathRouteStructure {
     static instance: PathRoute;
 
     constructor() {
-        this.#io = new PathFileManager(this);
+        this.#io = new PathFileManager();
         if (PathRoute.instance) {
             return PathRoute.instance;
         }
