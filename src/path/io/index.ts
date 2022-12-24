@@ -1,27 +1,9 @@
 import fs from 'node:fs';
-import path from 'node:path';
-import PathRoute from '..';
 
 import { FS_CONSTANTS_ACCESS, PathFileManagerStructure } from '../../types/io';
 
 export default class PathFileManager implements PathFileManagerStructure {
-    #pathRoute: PathRoute;
-    #routeName: string = '';
-
-    constructor(pathRoute: PathRoute) {
-        this.#pathRoute = pathRoute;
-    }
-
-    /**
-     * @description set the default route that will interact with methods of the class
-     * @param routeName
-     * @returns
-     */
-
-    setRouteName(name: string): PathFileManager {
-        this.#routeName = name;
-        return this;
-    }
+    constructor() {}
 
     /**
      * @description Asynchronously uses 'fs.access' to verify if file is valid
@@ -131,6 +113,34 @@ export default class PathFileManager implements PathFileManagerStructure {
             const isReadable = await this.isFileValid(filepath);
             if (!isReadable) return false;
             await fs.promises.unlink(filepath);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+    /**
+     * @description Checks if the folder is valid
+     * @param folderpath
+     */
+    isFolderValid(folderpath: string): boolean {
+        return (
+            !!fs.existsSync(folderpath) &&
+            fs.lstatSync(folderpath).isDirectory()
+        );
+    }
+
+    /**
+     * @description create a new folder if it doesn't exist
+     * @param {String} routeName
+     * @param {String} folderName
+     */
+
+    createFolder(folderpath: string): boolean {
+        try {
+            if (this.isFolderValid(folderpath)) return false;
+            fs.mkdirSync(folderpath, {
+                recursive: false,
+            });
             return true;
         } catch (error) {
             return false;

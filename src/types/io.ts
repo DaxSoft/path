@@ -1,9 +1,6 @@
-import PathFileManager from '../path/io';
-
 export type FS_CONSTANTS_ACCESS = 'F_OK' | 'R_OK' | 'W_OK';
 
 export interface PathFileManagerStructure {
-    setRouteName(routeName: string): PathFileManager;
     isFileValid(
         filepath: string,
         modes: FS_CONSTANTS_ACCESS[]
@@ -20,4 +17,6 @@ export interface PathFileManagerStructure {
         enconding: BufferEncoding
     ): Promise<boolean>;
     remove(filepath: string): Promise<boolean>;
+    isFolderValid(folderpath: string): boolean;
+    createFolder(folderpath: string): boolean;
 }
