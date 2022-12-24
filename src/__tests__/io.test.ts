@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { default as PathRoute } from '../index';
+import { default as PathRoute } from '../path/index';
 
 const TestRoute = new PathRoute();
 TestRoute.add('main', __dirname);
-TestRoute.add('@', TestRoute.backward('main', 3));
+TestRoute.add('@', TestRoute.backward('main', 2));
 
 const FILENAME_TEST = '__vite.test.txt';
 const FILENAME_DATA_TEST = new Date().toDateString();

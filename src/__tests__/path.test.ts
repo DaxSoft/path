@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import path from 'node:path';
 
-import { default as PathRoute } from './index';
+import { default as PathRoute } from '../path/index';
 
 const TestRoute = new PathRoute();
 TestRoute.add('main', __dirname);
