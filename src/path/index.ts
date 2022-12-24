@@ -28,6 +28,10 @@ export default class PathRoute implements PathRouteStructure {
         PathRoute.instance = this;
     }
 
+    /**
+     * @description access the FileManager
+     * @returns {PathFileManager}
+     */
     io(): PathFileManager {
         return this.#io;
     }
