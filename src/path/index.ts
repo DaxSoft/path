@@ -7,8 +7,11 @@
 */
 
 import path from 'node:path';
+import fs from 'node:fs';
 import { sanitizeFilepath } from '../utils/regex';
 import {
+    FilesDataContext,
+    FolderDataContext,
     PathHierarchyContext,
     PathRouteStructure,
     RoutesDataContext,
@@ -297,5 +300,140 @@ export default class PathRoute implements PathRouteStructure {
 
     dirname(filepath: string): string {
         return path.dirname(filepath);
+    }
+
+    /**
+     * @description return all files inside of the route
+     * @param {String} routeName this need to be registred on route
+     * @param {String} [extension=undefined] if you want to filter the files
+     * by extensions.
+     * @example
+     * instance.files('src')
+     * instance.files('src', 'json')
+     * instance.files('src', 'json|js')
+     * @returns {Array} each element on this <array> will be a <object> with
+     * the follow pattern:
+     * {
+     *  name: name of the file,
+     *  filename: name of the file with extension,
+     *  path: path to file,
+     *  extension: extension of the file
+     * }
+     */
+    async files(
+        routeName: string,
+        extension = undefined
+    ): Promise<FilesDataContext[]> {
+        const data: FilesDataContext[] = [];
+
+        const route = this.get(routeName);
+        if (!route) return data;
+
+        const exists = this.#io.exists(route.routePath);
+        if (!exists) return data;
+
+        const files = await fs.promises.readdir(route.routePath, {
+            encoding: 'utf-8',
+        });
+
+        files.map((file) => {
+            const _fpath = path.join(route.routePath, file);
+            const status = fs.lstatSync(_fpath);
+
+            // is directory?
+            if (!status.isDirectory()) {
+                let fname = _fpath.replace(/^.*[\\\/]/, '');
+                let ext = path.extname(fname);
+                // extension?
+                if (!!extension && !fname.match(extension)) {
+                    return;
+                }
+
+                data.push({
+                    name: fname.replace(ext, ''),
+                    filename: fname,
+                    filepath: _fpath,
+                    extension: ext,
+                    routeName: route.routeName,
+                });
+            }
+        });
+
+        return data;
+    }
+    /**
+     * @description returns the last modified files from the folder
+     * @param {String} routeName
+     */
+
+    async lastFiles(
+        routeName: string,
+        extension = undefined
+    ): Promise<FilesDataContext[]> {
+        let files: FilesDataContext[] = await this.files(routeName, extension);
+        return files.sort((a, b) => {
+            const bDate = fs.statSync(b.filepath).mtimeMs;
+            const aDate = fs.statSync(a.filepath).mtimeMs;
+            return bDate - aDate;
+        });
+    }
+
+    /**
+     * @description returns all the filepaths from folder and subfolders
+     */
+    async allFilepaths(
+        folderpath: string,
+        files: string[] = []
+    ): Promise<string[]> {
+        const directoryFiles = await fs.promises.readdir(folderpath);
+
+        await Promise.allSettled(
+            directoryFiles.map(async (file) => {
+                const subpath = path.join(folderpath, file);
+                if (fs.lstatSync(subpath).isDirectory()) {
+                    await this.allFilepaths(subpath, files);
+                } else {
+                    files.push(subpath);
+                }
+            })
+        );
+
+        return files;
+    }
+
+    /**
+     * @description return all directories of the route
+     * @param {String} routeName this need to be registred on route
+     * @param {RegExp} [filter=undefined] this is a regexp
+     * @example
+     * Route.Example.folders('home')
+     * Route.Example.folders('home', /^\a/gi)
+     * @return {Array} each element on this <array> will be a <object> with
+     * the follow pattern:
+     * {
+     *  name: name of the folder,
+     *  path: path to folder,
+     * }
+     */
+    async folders(routeName: string): Promise<FolderDataContext[]> {
+        const data: FolderDataContext[] = [];
+
+        const route = this.get(routeName);
+        if (!route) return data;
+
+        let directories = fs.readdirSync(route.routePath);
+        directories = directories
+            .map((name) => path.join(route.routePath, name))
+            .filter(this.io().isDirectory);
+
+        directories.map((source) => {
+            const name = source.replace(/^.*[\\\/]/, '');
+            data.push({
+                name,
+                path: source,
+            });
+        });
+
+        return data;
     }
 }

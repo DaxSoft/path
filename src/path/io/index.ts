@@ -165,4 +165,22 @@ export default class PathFileManager implements PathFileManagerStructure {
             return false;
         }
     }
+
+    /**
+     * @description check if the path exists
+     * @param filepath
+     */
+
+    exists(filepath: string): boolean {
+        return fs.existsSync(filepath);
+    }
+
+    /**
+     * @description check if it is a directory
+     * @param filepath
+     */
+
+    isDirectory(folderpath: string): boolean {
+        return fs.lstatSync(folderpath).isDirectory();
+    }
 }

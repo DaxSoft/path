@@ -20,4 +20,6 @@ export interface PathFileManagerStructure {
     isFolderValid(folderpath: string): boolean;
     createFolder(folderpath: string): boolean;
     removeFolder(folderpath: string): Promise<boolean>;
+    exists(filepath: string): boolean;
+    isDirectory(folderpath: string): boolean;
 }

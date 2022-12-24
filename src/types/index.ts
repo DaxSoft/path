@@ -16,6 +16,19 @@ export type PathHierarchyContext = {
     current: string;
 };
 
+export type FilesDataContext = {
+    name: string;
+    filename: string;
+    filepath: string;
+    extension: string;
+    routeName: string;
+};
+
+export type FolderDataContext = {
+    name: string;
+    path: string;
+};
+
 export interface PathRouteStructure {
     io(): PathFileManager;
     routes(): RoutesDataContext[];
@@ -39,4 +52,11 @@ export interface PathRouteStructure {
     resolve(...paths: string[]): string;
     basename(filepath: string, ext: string): string;
     dirname(filepath: string): string;
+    files(routeName: string, extension?: string): Promise<FilesDataContext[]>;
+    lastFiles(
+        routeName: string,
+        extension?: string
+    ): Promise<FilesDataContext[]>;
+    allFilepaths(folderpath: string, files: string[]): Promise<string[]>;
+    folders(routeName: string): Promise<FolderDataContext[]>;
 }
