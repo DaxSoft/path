@@ -122,6 +122,7 @@ export default class PathFileManager implements PathFileManagerStructure {
      * @description Checks if the folder is valid
      * @param folderpath
      */
+
     isFolderValid(folderpath: string): boolean {
         return (
             !!fs.existsSync(folderpath) &&
@@ -141,6 +142,24 @@ export default class PathFileManager implements PathFileManagerStructure {
             fs.mkdirSync(folderpath, {
                 recursive: false,
             });
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    /**
+     * @description Asynchronously deletes folder if it doesn't exist
+     * @param {String} routeName
+     * @param {String} folderName
+     */
+
+    async removeFolder(folderpath: string): Promise<boolean> {
+        try {
+            const hasFolder = await this.isFolderValid(folderpath);
+            if (!hasFolder) return false;
+            await fs.promises.rmdir(folderpath);
             return true;
         } catch (error) {
             return false;
