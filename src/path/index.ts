@@ -12,13 +12,10 @@ import {
     PathHierarchyContext,
     PathRouteStructure,
     RoutesDataContext,
-    RoutesStorageContext,
 } from './types';
 
 export default class PathRoute implements PathRouteStructure {
     #routes: RoutesDataContext[] = [];
-    #namespace?: string;
-    #storage: RoutesStorageContext = {};
     static instance: PathRoute;
 
     constructor() {
@@ -65,6 +62,7 @@ export default class PathRoute implements PathRouteStructure {
      * @param routeName
      * @returns {boolean}
      */
+
     has(routeName: string): boolean {
         return !!this.get(routeName);
     }
