@@ -31,6 +31,13 @@ describe('PathRoute', () => {
         expect(TestRoute.remove('x').has('x')).toBe(false);
     });
 
+    it('edit', () => {
+        expect(
+            TestRoute.add('&', '../../t').edit('&', '../../edited').get('&')
+                ?.routePath
+        ).toBe('../../edited');
+    });
+
     it('alias', () => {
         const alias = TestRoute.alias('z', 'y').get('z');
         const y = TestRoute.get('y');
@@ -82,5 +89,30 @@ describe('PathRoute', () => {
     it('hierarchy', () => {
         const hierarchy = TestRoute.hierarchy('main');
         expect(hierarchy.hasOwnProperty('src')).toBe(true);
+    });
+
+    it('files', async () => {
+        const files = await TestRoute.files('main');
+        const hasIoTest = files.find((d) => d.name === 'io.test');
+        expect(hasIoTest?.extension).toBe('.ts');
+    });
+
+    it('allFilepaths', async () => {
+        const allFilepaths = await TestRoute.allFilepaths(
+            TestRoute.backward('main', 1) || ''
+        );
+        const itHasPathTestFile = allFilepaths.find(
+            (d) => TestRoute.basename(d) === 'path.test.ts'
+        );
+        expect(!!itHasPathTestFile).toBe(true);
+    });
+
+    it('folders', async () => {
+        const folders = await TestRoute.add(
+            '@',
+            TestRoute.backward('main', 2)
+        ).folders('@');
+        const hasSrcFolder = folders.find((d) => d.name === 'src');
+        expect(hasSrcFolder?.name).toBe('src');
     });
 });

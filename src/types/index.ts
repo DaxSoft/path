@@ -55,7 +55,7 @@ export interface PathRouteStructure {
     towards(filepath: string, to: string, strict?: boolean): string | undefined;
     hierarchy(routeName: string): Record<string, PathHierarchyContext>;
     resolve(...paths: string[]): string;
-    basename(filepath: string, ext: string): string;
+    basename(filepath: string, suffix?: string): string;
     dirname(filepath: string): string;
     files(routeName: string, extension?: string): Promise<FilesDataContext[]>;
     lastFiles(

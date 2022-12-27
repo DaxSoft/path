@@ -321,8 +321,8 @@ export default class PathRoute implements PathRouteStructure {
      * @description Alias for 'path.basename'
      * @param {String} [paths]
      */
-    basename(filepath: string, ext: string): string {
-        return path.basename(filepath, ext);
+    basename(filepath: string, suffix?: string): string {
+        return path.basename(filepath, suffix);
     }
 
     /**
