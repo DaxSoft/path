@@ -1,6 +1,6 @@
 {
     "name": "@vorlefan/path",
-    "version": "1.6.3",
+    "version": "1.8.1",
     "description": "Easy access and handler for folders and files paths with several tools",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
