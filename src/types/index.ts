@@ -1,6 +1,7 @@
 import PathRoute from '../path';
 import PathFileManager from '../path/io';
 import PathJsonManager from '../path/json';
+import PathStreamManager from '../path/stream';
 
 export type RoutesDataContext = {
     routeName: string;
@@ -31,6 +32,7 @@ export type FolderDataContext = {
 };
 
 export interface PathRouteStructure {
+    stream(): PathStreamManager;
     json(): PathJsonManager;
     io(): PathFileManager;
     routes(): RoutesDataContext[];

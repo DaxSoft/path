@@ -18,15 +18,26 @@ import {
 } from '../types';
 import PathFileManager from './io';
 import PathJsonManager from './json';
+import PathStreamManager from './stream';
 
 export default class PathRoute implements PathRouteStructure {
     #routes: RoutesDataContext[] = [];
     #io: PathFileManager;
     #json: PathJsonManager;
+    #stream: PathStreamManager;
 
     constructor() {
         this.#io = new PathFileManager();
         this.#json = new PathJsonManager(this);
+        this.#stream = new PathStreamManager(this);
+    }
+
+    /**
+     * @description access the JsonManager
+     * @returns {PathFileManager}
+     */
+    stream(): PathStreamManager {
+        return this.#stream;
     }
 
     /**
