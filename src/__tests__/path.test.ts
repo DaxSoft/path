@@ -115,4 +115,29 @@ describe('PathRoute', () => {
         const hasSrcFolder = folders.find((d) => d.name === 'src');
         expect(hasSrcFolder?.name).toBe('src');
     });
+
+    it('inject', async () => {
+        const dirAndRoute = TestRoute.inject('injected', 'main').get(
+            'injected'
+        );
+        const isFolder = TestRoute.io().isFolderValid(
+            dirAndRoute?.routePath || ''
+        );
+        expect(isFolder).toBe(true);
+
+        const removeFolder = await TestRoute.io().removeFolder(
+            dirAndRoute?.routePath || ''
+        );
+        expect(removeFolder).toBe(true);
+    });
+
+    it('foldersJoin', async () => {
+        const hasTestsFolder = TestRoute.add(
+            'src',
+            TestRoute.backward('main', 1) || ''
+        )
+            .foldersJoin('src')
+            .has('src/__tests__');
+        expect(hasTestsFolder).toBe(true);
+    });
 });
