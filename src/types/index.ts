@@ -1,5 +1,6 @@
 import PathRoute from '../path';
 import PathFileManager from '../path/io';
+import PathJsonManager from '../path/json';
 
 export type RoutesDataContext = {
     routeName: string;
@@ -30,6 +31,7 @@ export type FolderDataContext = {
 };
 
 export interface PathRouteStructure {
+    json(): PathJsonManager;
     io(): PathFileManager;
     routes(): RoutesDataContext[];
     has(routeName: string): boolean;
