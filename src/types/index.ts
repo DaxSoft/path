@@ -39,6 +39,7 @@ export interface PathRouteStructure {
     has(routeName: string): boolean;
     add(routeName: string, routePath: string): PathRoute;
     get(routeName: string): RoutesDataContext | undefined;
+    edit(routeName: string, routePath: string): PathRoute;
     remove(routeName: string): PathRoute;
     size(): number;
     alias(aliasRouteName: string, routeName: string): PathRoute;

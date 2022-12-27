@@ -89,6 +89,21 @@ export default class PathRoute implements PathRouteStructure {
     }
 
     /**
+     * @description edits a routePath from a route
+     * @param routeName
+     */
+    edit(routeName: string, routePath: string): PathRoute {
+        const rt = this.#routes.findIndex((d) => d.routeName === routeName);
+        if (rt) {
+            this.#routes[rt] = {
+                routeName,
+                routePath,
+            };
+        }
+        return this;
+    }
+
+    /**
      * @desc checks if a route exists
      * @param routeName
      * @returns {boolean}

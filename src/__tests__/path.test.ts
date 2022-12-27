@@ -27,7 +27,7 @@ describe('PathRoute', () => {
         expect(TestRoute.add('y', '../').size()).toBe(3);
     });
 
-    it('Iremove', () => {
+    it('remove', () => {
         expect(TestRoute.remove('x').has('x')).toBe(false);
     });
 
