@@ -8,13 +8,14 @@
 
 import path from 'node:path';
 import fs from 'node:fs';
-import { sanitizeFilepath } from '../utils/regex';
+import { sanitizeFilepath, splitFilepath } from '../utils/regex';
 import {
     FilesDataContext,
     FolderDataContext,
     PathHierarchyContext,
     PathRouteStructure,
     RoutesDataContext,
+    RouteSkipContext,
 } from '../types';
 import PathFileManager from './io';
 import PathJsonManager from './json';
@@ -25,6 +26,7 @@ export default class PathRoute implements PathRouteStructure {
     #io: PathFileManager;
     #json: PathJsonManager;
     #stream: PathStreamManager;
+    #skipFolders: RouteSkipContext[] = [];
 
     constructor() {
         this.#io = new PathFileManager(this);
@@ -62,6 +64,71 @@ export default class PathRoute implements PathRouteStructure {
      */
     routes(): RoutesDataContext[] {
         return this.#routes;
+    }
+
+    /**
+     * @description adds folder to be skipped when interacting with some methods of this class,
+     * such as 'allFilepaths', 'folders'
+     * @param context
+     * @example
+     * instance.skip([
+     *  [source, foldername]
+     * ])
+     * instance.skip([
+     *  ['../yourprojectfolder', 'node_modules'] // it will ignore the node modules
+     * ])
+     */
+
+    skip(context: RouteSkipContext[]): PathRoute {
+        this.#skipFolders = [...context];
+        return this;
+    }
+
+    /**
+     * @description check if folderpath has to be skipped or not
+     * @param folderpath must be absolute path
+     */
+    hasSkipped(fpath: string): boolean {
+        let skipped: boolean = false;
+        let index = 0;
+        let length = this.#skipFolders.length;
+        let folderpath = sanitizeFilepath(fpath)
+            .replace(/(\/|\\)/g, '_')
+            .replace(':', '');
+        const folderLastDir = this.endsWith(fpath);
+
+        const splittedFolderpath = splitFilepath(fpath);
+
+        for (index; index < length; index++) {
+            const [_source, _folder] = this.#skipFolders[index];
+
+            const source = sanitizeFilepath(_source)
+                .replace(/(\/|\\)/g, '_')
+                .replace(':', '');
+            let folderSourceEndsWith = this.endsWith(_source);
+            const indexOfLastDir = splittedFolderpath.findIndex(
+                (d) => d === folderSourceEndsWith
+            );
+
+            const rule = new RegExp(`^(${source})`, 'gm');
+            const isSameRoot = rule.test(folderpath);
+
+            const lastDirIsEqualTo = folderLastDir === _folder;
+            const hasFolderToSkip = splittedFolderpath.find(
+                (foldername, index) =>
+                    index >= indexOfLastDir && foldername === _folder
+            );
+
+            if (
+                (isSameRoot && lastDirIsEqualTo) ||
+                (isSameRoot && hasFolderToSkip)
+            ) {
+                skipped = true;
+                break;
+            }
+        }
+
+        return skipped;
     }
 
     /**
@@ -287,7 +354,7 @@ export default class PathRoute implements PathRouteStructure {
         if (!route) return paths;
 
         const { routePath: filepath } = route;
-        let splitPaths = filepath.replace(/(\/|\/\/|\\|\\\\)/g, ' ').split(' ');
+        let splitPaths = splitFilepath(filepath);
         splitPaths.map((current, currentIndex, array) => {
             let previous = array[currentIndex - 1];
 
@@ -425,7 +492,9 @@ export default class PathRoute implements PathRouteStructure {
                 if (fs.lstatSync(subpath).isDirectory()) {
                     await this.allFilepaths(subpath, files);
                 } else {
-                    files.push(subpath);
+                    if (!this.hasSkipped(subpath)) {
+                        files.push(subpath);
+                    }
                 }
             })
         );
@@ -456,7 +525,8 @@ export default class PathRoute implements PathRouteStructure {
         let directories = fs.readdirSync(route.routePath);
         directories = directories
             .map((name) => path.join(route.routePath, name))
-            .filter(this.io().isDirectory);
+            .filter(this.io().isDirectory)
+            .filter((value) => this.hasSkipped(value) === false);
 
         directories.map((source) => {
             const name = source.replace(/^.*[\\\/]/, '');

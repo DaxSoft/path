@@ -140,4 +140,27 @@ describe('PathRoute', () => {
             .has('src/__tests__');
         expect(hasTestsFolder).toBe(true);
     });
+
+    it('skip', async () => {
+        const hasSkipped = TestRoute.skip([
+            [TestRoute.get('@')?.routePath || '', 'node_modules'],
+        ]).hasSkipped(TestRoute.plug('@', 'node_modules') || '');
+
+        expect(hasSkipped).toBe(true);
+    });
+
+    it('allFilepaths+skip', async () => {
+        const filepaths = await TestRoute.skip([
+            [TestRoute.get('@')?.routePath || '', '__tests__'],
+            [TestRoute.get('@')?.routePath || '', 'node_modules'],
+            [TestRoute.get('@')?.routePath || '', '.git'],
+            [TestRoute.get('@')?.routePath || '', 'dist'],
+        ]).allFilepaths(TestRoute.get('@')?.routePath || '');
+
+        const hasJsonTestFilepath = filepaths.includes(
+            TestRoute.plug('src/__tests__', 'json.test.ts') || ''
+        );
+
+        expect(hasJsonTestFilepath).toBe(false);
+    });
 });

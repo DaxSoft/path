@@ -3,6 +3,8 @@ import PathFileManager from '../path/io';
 import PathJsonManager from '../path/json';
 import PathStreamManager from '../path/stream';
 
+export type RouteSkipContext = [source: string, folder: string];
+
 export type RoutesDataContext = {
     routeName: string;
     routePath: string;
@@ -36,6 +38,8 @@ export interface PathRouteStructure {
     json(): PathJsonManager;
     io(): PathFileManager;
     routes(): RoutesDataContext[];
+    skip(context: RouteSkipContext[]): PathRoute;
+    hasSkipped(folderpath: string): boolean;
     has(routeName: string): boolean;
     add(routeName: string, routePath: string): PathRoute;
     get(routeName: string): RoutesDataContext | undefined;
