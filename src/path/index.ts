@@ -27,7 +27,7 @@ export default class PathRoute implements PathRouteStructure {
     #stream: PathStreamManager;
 
     constructor() {
-        this.#io = new PathFileManager();
+        this.#io = new PathFileManager(this);
         this.#json = new PathJsonManager(this);
         this.#stream = new PathStreamManager(this);
     }

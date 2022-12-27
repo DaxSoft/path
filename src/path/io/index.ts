@@ -1,9 +1,14 @@
 import fs from 'node:fs';
+import PathRoute from '..';
 
 import { FS_CONSTANTS_ACCESS, PathFileManagerStructure } from '../../types/io';
 
 export default class PathFileManager implements PathFileManagerStructure {
-    constructor() {}
+    #route: PathRoute;
+
+    constructor(pr: PathRoute) {
+        this.#route = pr;
+    }
 
     /**
      * @description Asynchronously uses 'fs.access' to verify if file is valid
