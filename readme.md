@@ -1,7 +1,6 @@
 # Path Route
 
-This is my first npm package module. The main function is to give the power of easily accessing the folders and files of your project.
-Portable for TypeScript
+This npm package gives you the ability to easily access and manage the file paths of your project. Our core function is to provide a simple and intuitive way to navigate the folders and files within your project, making it easier to organize and maintain your codebase. Whether you're working on a small project or a large-scale application, this package can save you time and hassle by streamlining your file management workflow. Try it out and see how it can benefit your development process.
 
 [![https://badgen.net/bundlephobia/minzip/@vorlefan/path](https://badgen.net/bundlephobia/minzip/@vorlefan/path)](https://bundlephobia.com/result?p=@vorlefan/path)]
 
