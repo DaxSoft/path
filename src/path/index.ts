@@ -26,7 +26,7 @@ export default class PathRoute implements PathRouteStructure {
     #io: PathFileManager;
     #json: PathJsonManager;
     #stream: PathStreamManager;
-    #skipFolders: RouteSkipContext[] = [];
+    #skipFolders: Set<string> = new Set();
 
     constructor() {
         this.#io = new PathFileManager(this);
@@ -80,8 +80,59 @@ export default class PathRoute implements PathRouteStructure {
      */
 
     skip(context: RouteSkipContext[]): PathRoute {
-        this.#skipFolders = [...context];
+        context.map((ctx) => {
+            this.#skipFolders.add(ctx.join('|'));
+        });
         return this;
+    }
+
+    /**
+     * @description adds a new folder to be skipped
+     * @param source
+     * @param folder
+     */
+    addSkip(source: string, folder: string): PathRoute {
+        this.#skipFolders.add(`${source}|${folder}`);
+        return this;
+    }
+
+    /**
+     * @description checks if has folder to be skipped
+     * @param source
+     * @param folder
+     */
+
+    hasSkip(source: string, folder: string): boolean {
+        return this.#skipFolders.has(`${source}|${folder}`);
+    }
+
+    /**
+     * @desc deletes a skip folder
+     * @param source
+     * @param folder
+     */
+    deleteSkip(source: string, folder: string): PathRoute {
+        this.#skipFolders.delete(`${source}|${folder}`);
+        return this;
+    }
+
+    /**
+     * @description deletes all skips
+     */
+
+    clearSkips(): PathRoute {
+        this.#skipFolders.clear();
+        return this;
+    }
+
+    /**
+     * @description gets all skips
+     */
+
+    getSkips(): RouteSkipContext[] {
+        return Array.from(this.#skipFolders).map(
+            (d) => d.split('|') as RouteSkipContext
+        );
     }
 
     /**
@@ -90,8 +141,6 @@ export default class PathRoute implements PathRouteStructure {
      */
     hasSkipped(fpath: string): boolean {
         let skipped: boolean = false;
-        let index = 0;
-        let length = this.#skipFolders.length;
         // let folderpath = sanitizeFilepath(fpath)
         //     .replace(/(\/|\\)/g, '_')
         //     .replace(':', '');
@@ -99,8 +148,8 @@ export default class PathRoute implements PathRouteStructure {
 
         const splittedFolderpath = splitFilepath(fpath);
 
-        for (index; index < length; index++) {
-            const [_source, _folder] = this.#skipFolders[index];
+        for (const item of this.#skipFolders.values()) {
+            const [_source, _folder] = item.split('|');
 
             // const source = sanitizeFilepath(_source)
             //     .replace(/(\/|\\)/g, '_')

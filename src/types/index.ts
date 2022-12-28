@@ -38,6 +38,11 @@ export interface PathRouteStructure {
     json(): PathJsonManager;
     io(): PathFileManager;
     routes(): RoutesDataContext[];
+    addSkip(source: string, folder: string): PathRoute;
+    hasSkip(source: string, folder: string): boolean;
+    deleteSkip(source: string, folder: string): PathRoute;
+    clearSkips(): PathRoute;
+    getSkips(): RouteSkipContext[];
     skip(context: RouteSkipContext[]): PathRoute;
     hasSkipped(folderpath: string): boolean;
     isFilepathSameSource(
