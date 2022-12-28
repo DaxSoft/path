@@ -4,10 +4,10 @@ import PathRoute from '..';
 import { FS_CONSTANTS_ACCESS, PathFileManagerStructure } from '../../types/io';
 
 export default class PathFileManager implements PathFileManagerStructure {
-    #route: PathRoute;
+    _route: PathRoute;
 
     constructor(pr: PathRoute) {
-        this.#route = pr;
+        this._route = pr;
     }
 
     /**

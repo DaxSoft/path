@@ -5,10 +5,10 @@ import http from 'node:http';
 import https from 'node:https';
 
 export default class PathStreamManager implements PathStreamManagerStructure {
-    #route: PathRoute;
+    _route: PathRoute;
 
     constructor(pr: PathRoute) {
-        this.#route = pr;
+        this._route = pr;
     }
 
     /**
@@ -57,7 +57,7 @@ export default class PathStreamManager implements PathStreamManagerStructure {
                 .on('end', function () {
                     resolve(data);
                 })
-                .on('error', function (error) {
+                .on('error', function () {
                     reject(undefined);
                 });
         });

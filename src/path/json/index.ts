@@ -2,10 +2,10 @@ import PathRoute from '..';
 import { PathJsonManagerStructure } from '../../types/json';
 
 export default class PathJsonManager implements PathJsonManagerStructure {
-    #route: PathRoute;
+    _route: PathRoute;
 
     constructor(pr: PathRoute) {
-        this.#route = pr;
+        this._route = pr;
     }
 
     /**
@@ -15,7 +15,7 @@ export default class PathJsonManager implements PathJsonManagerStructure {
     async read<T = Record<string, any>>(
         filepath: string
     ): Promise<T | undefined> {
-        const content = await this.#route.io().read(filepath);
+        const content = await this._route.io().read(filepath);
         if (!content) return undefined;
         return JSON.parse(content) as T;
     }
@@ -33,7 +33,7 @@ export default class PathJsonManager implements PathJsonManagerStructure {
         force: boolean = true
     ): Promise<boolean> {
         const string = JSON.stringify(data, null, '\t');
-        const response = await this.#route.io().write(filepath, string, force);
+        const response = await this._route.io().write(filepath, string, force);
         return response;
     }
 }
