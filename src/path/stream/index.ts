@@ -67,7 +67,7 @@ export default class PathStreamManager implements PathStreamManagerStructure {
      * @description write a new file using streams
      */
 
-    async write(filepath: string, data: any): Promise<boolean> {
+    async write(filepath: string, data: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             const writeStream = fs.createWriteStream(filepath, {
                 encoding: 'utf-8',

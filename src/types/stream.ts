@@ -3,7 +3,7 @@ export interface PathStreamManagerStructure {
         filepath: string,
         onData?: (chunk: string | Buffer, data: string | Buffer) => void
     ): Promise<string | undefined>;
-    write(filepath: string, data: any): Promise<boolean>;
+    write(filepath: string, data: string): Promise<boolean>;
     download(
         url: string,
         destination: string,
