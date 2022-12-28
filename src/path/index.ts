@@ -92,9 +92,9 @@ export default class PathRoute implements PathRouteStructure {
         let skipped: boolean = false;
         let index = 0;
         let length = this.#skipFolders.length;
-        let folderpath = sanitizeFilepath(fpath)
-            .replace(/(\/|\\)/g, '_')
-            .replace(':', '');
+        // let folderpath = sanitizeFilepath(fpath)
+        //     .replace(/(\/|\\)/g, '_')
+        //     .replace(':', '');
         const folderLastDir = this.endsWith(fpath);
 
         const splittedFolderpath = splitFilepath(fpath);
@@ -102,16 +102,16 @@ export default class PathRoute implements PathRouteStructure {
         for (index; index < length; index++) {
             const [_source, _folder] = this.#skipFolders[index];
 
-            const source = sanitizeFilepath(_source)
-                .replace(/(\/|\\)/g, '_')
-                .replace(':', '');
+            // const source = sanitizeFilepath(_source)
+            //     .replace(/(\/|\\)/g, '_')
+            //     .replace(':', '');
             let folderSourceEndsWith = this.endsWith(_source);
             const indexOfLastDir = splittedFolderpath.findIndex(
                 (d) => d === folderSourceEndsWith
             );
 
-            const rule = new RegExp(`^(${source})`, 'gm');
-            const isSameRoot = rule.test(folderpath);
+            // const rule = new RegExp(`^(${source})`, 'gm');
+            const isSameRoot = this.isFilepathSameRoot(_source, fpath);
 
             const lastDirIsEqualTo = folderLastDir === _folder;
             const hasFolderToSkip = splittedFolderpath.find(
@@ -129,6 +129,25 @@ export default class PathRoute implements PathRouteStructure {
         }
 
         return skipped;
+    }
+
+    /**
+     * @description check if the filepath is from the same source
+     * @param sourceFilepath
+     * @param targetFilepath
+     */
+    isFilepathSameRoot(
+        sourceFilepath: string,
+        targetFilepath: string
+    ): boolean {
+        const source = sanitizeFilepath(sourceFilepath)
+            .replace(/(\/|\\)/g, '_')
+            .replace(':', '');
+        let target = sanitizeFilepath(targetFilepath)
+            .replace(/(\/|\\)/g, '_')
+            .replace(':', '');
+        const rule = new RegExp(`^(${source})`, 'gm');
+        return rule.test(target);
     }
 
     /**

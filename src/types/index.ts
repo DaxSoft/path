@@ -40,6 +40,7 @@ export interface PathRouteStructure {
     routes(): RoutesDataContext[];
     skip(context: RouteSkipContext[]): PathRoute;
     hasSkipped(folderpath: string): boolean;
+    isFilepathSameRoot(sourceFilepath: string, targetFilepath: string): boolean;
     has(routeName: string): boolean;
     add(routeName: string, routePath: string): PathRoute;
     get(routeName: string): RoutesDataContext | undefined;
