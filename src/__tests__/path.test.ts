@@ -163,4 +163,17 @@ describe('PathRoute', () => {
 
         expect(hasJsonTestFilepath).toBe(false);
     });
+
+    it('isFilepathSameSource', () => {
+        const isSameRoot = TestRoute.isFilepathSameSource(
+            TestRoute.get('@')?.routePath || '',
+            TestRoute.get('src/__tests__')?.routePath || ''
+        );
+        expect(isSameRoot).toBe(true);
+    });
+
+    it('isRouteSameSource', () => {
+        const isSameRoot = TestRoute.isRouteSameSource('@', 'src');
+        expect(isSameRoot).toBe(true);
+    });
 });

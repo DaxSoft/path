@@ -111,7 +111,7 @@ export default class PathRoute implements PathRouteStructure {
             );
 
             // const rule = new RegExp(`^(${source})`, 'gm');
-            const isSameRoot = this.isFilepathSameRoot(_source, fpath);
+            const isSameRoot = this.isFilepathSameSource(_source, fpath);
 
             const lastDirIsEqualTo = folderLastDir === _folder;
             const hasFolderToSkip = splittedFolderpath.find(
@@ -136,7 +136,7 @@ export default class PathRoute implements PathRouteStructure {
      * @param sourceFilepath
      * @param targetFilepath
      */
-    isFilepathSameRoot(
+    isFilepathSameSource(
         sourceFilepath: string,
         targetFilepath: string
     ): boolean {
@@ -148,6 +148,27 @@ export default class PathRoute implements PathRouteStructure {
             .replace(':', '');
         const rule = new RegExp(`^(${source})`, 'gm');
         return rule.test(target);
+    }
+
+    /**
+     * @description check if the route is from the same source
+     * @param sourceRouteName
+     * @param targetRouteName
+     */
+    isRouteSameSource(
+        sourceRouteName: string,
+        targetRouteName: string
+    ): boolean {
+        const source = this.get(sourceRouteName);
+        const target = this.get(targetRouteName);
+        if (!source || !target) {
+            return false;
+        } else {
+            return this.isFilepathSameSource(
+                source.routePath,
+                target.routePath
+            );
+        }
     }
 
     /**
