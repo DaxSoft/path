@@ -4,6 +4,7 @@
     "description": "Easy access and handler for folders and files paths with several tools",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "type": "module",
     "author": {
         "name": "Michael Willian Santos",
         "email": "dax-soft@live.com",
@@ -27,7 +28,6 @@
     },
     "license": "MIT",
     "private": false,
-    "type": "module",
     "devDependencies": {
         "@typescript-eslint/parser": "^5.38.1",
         "@vitest/coverage-istanbul": "^0.25.8",
