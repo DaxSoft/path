@@ -2,10 +2,8 @@
     "name": "@vorlefan/path",
     "version": "1.8.34",
     "description": "Easy access and handler for folders and files paths with several tools",
-    "main": "dist/cjs/index.js",
-    "module": "dist/esm/index.js",
+    "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "type": "module",
     "author": {
         "name": "Michael Willian Santos",
         "email": "dax-soft@live.com",
@@ -19,28 +17,35 @@
         "tree"
     ],
     "scripts": {
-        "build": "tsc -p tsconfig.json && tsc -p tsconfig.cjs.json",
-        "prepublish": "yarn run tsc",
+        "build": "webpack --mode production",
+        "prepublish": "webpack --mode production",
         "format": "prettier \"**/*\" --ignore-unknown",
         "format:write": "yarn run format --write",
         "lint:prune": "ts-prune",
         "lint:spelling": "cspell \"**\" \".github/**/*\"",
         "prepare": "husky install",
-        "test": "vitest"
+        "test": "vitest",
+        "dev": "npm link && nodemon"
     },
     "license": "MIT",
     "private": false,
     "devDependencies": {
+        "@babel/core": "^7.21.0",
         "@typescript-eslint/parser": "^5.38.1",
         "@vitest/coverage-istanbul": "^0.25.8",
+        "babel-loader": "^9.1.2",
         "husky": "^8.0.2",
         "lint-staged": "^13.1.0",
+        "nodemon": "^2.0.21",
         "octokit": "^2.0.10",
         "prettier": "^2.7.1",
         "release-it": "^15.5.1",
+        "ts-loader": "^9.4.2",
         "ts-prune": "^0.10.3",
         "typescript": "^4.9.4",
-        "vitest": "^0.26.2"
+        "vitest": "^0.26.2",
+        "webpack": "^5.76.0",
+        "webpack-cli": "^5.0.1"
     },
     "publishConfig": {
         "access": "public"
